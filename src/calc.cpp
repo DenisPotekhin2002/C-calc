@@ -19,7 +19,9 @@ enum class Op
     REM,
     NEG,
     POW,
-    SQRT
+    SQRT,
+    FAC,
+    LOG,
 };
 
 std::size_t arity(const Op op)
@@ -30,6 +32,7 @@ std::size_t arity(const Op op)
     // unary
     case Op::NEG: return 1;
     case Op::SQRT: return 1;
+    case Op::FAC: return 1;
     // binary
     case Op::SET: return 2;
     case Op::ADD: return 2;
@@ -38,6 +41,7 @@ std::size_t arity(const Op op)
     case Op::DIV: return 2;
     case Op::REM: return 2;
     case Op::POW: return 2;
+    case Op::LOG: return 2;
     }
     return 0;
 }
@@ -76,6 +80,8 @@ Op parse_op(const std::string & line, std::size_t & i)
         return Op::NEG;
     case '^':
         return Op::POW;
+    case '!':
+        return Op::FAC;
     case 'S':
         switch (line[i++]) {
         case 'Q':
@@ -87,6 +93,18 @@ Op parse_op(const std::string & line, std::size_t & i)
                 default:
                     return rollback(4);
                 }
+            default:
+                return rollback(3);
+            }
+        default:
+            return rollback(2);
+        }
+    case 'L':
+        switch (line[i++]) {
+        case 'O':
+            switch (line[i++]) {
+            case 'G':
+                return Op::LOG;
             default:
                 return rollback(3);
             }
@@ -165,6 +183,19 @@ double unary(const double current, const Op op)
         }
         else {
             std::cerr << "Bad argument for SQRT: " << current << std::endl;
+            return current;
+        }
+    case Op::FAC:
+        if (current > 0 && (std::abs(current - round(current)) < 1e-5)){
+            float res = current;
+            int i = current - 1;
+            while (i > 0){
+                res *= i;
+                i--;
+            }
+            return res;
+        } else {
+            std::cerr << "Bad argument for factorial: " << current << std::endl;
             [[fallthrough]];
         }
     default:
@@ -201,6 +232,16 @@ double binary(const Op op, const double left, const double right)
         }
     case Op::POW:
         return std::pow(left, right);
+    case Op::LOG:
+        if (left <= 0){
+            std::cerr << "Bad argument for logarithm: " << left << std::endl;
+            return left;
+        } else if (right <= 0 || right == 1){
+            std::cerr << "Bad base for logarithm: " << right << std::endl;
+            return left;
+        } else {
+            return log(left) / log(right);
+        }
     default:
         return left;
     }
