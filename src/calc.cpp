@@ -186,15 +186,16 @@ double unary(const double current, const Op op)
             return current;
         }
     case Op::FAC:
-        if (current > 0 && (std::abs(current - round(current)) < 1e-5)){
+        if (current > 0 && (std::abs(current - round(current)) < 1e-5)) {
             float res = current;
             int i = current - 1;
-            while (i > 0){
+            while (i > 0) {
                 res *= i;
                 i--;
             }
             return res;
-        } else {
+        }
+        else {
             std::cerr << "Bad argument for factorial: " << current << std::endl;
             [[fallthrough]];
         }
@@ -233,13 +234,15 @@ double binary(const Op op, const double left, const double right)
     case Op::POW:
         return std::pow(left, right);
     case Op::LOG:
-        if (left <= 0){
+        if (left <= 0) {
             std::cerr << "Bad argument for logarithm: " << left << std::endl;
             return left;
-        } else if (right <= 0 || right == 1){
+        }
+        else if (right <= 0 || right == 1) {
             std::cerr << "Bad base for logarithm: " << right << std::endl;
             return left;
-        } else {
+        }
+        else {
             return log(left) / log(right);
         }
     default:
