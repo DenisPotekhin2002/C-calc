@@ -186,9 +186,9 @@ double unary(const double current, const Op op)
             return current;
         }
     case Op::FAC:
-        if (current > 0 && (std::abs(current - round(current)) < 1e-5)){
-            float res = current;
-            int i = current - 1;
+        if (current > 0 && (std::abs(current - std::round(current)) < 1e-5)){
+            double res = std::round(current);
+            double i = res - 1;
             while (i > 0){
                 res *= i;
                 i--;
@@ -240,7 +240,7 @@ double binary(const Op op, const double left, const double right)
             std::cerr << "Bad base for logarithm: " << right << std::endl;
             return left;
         } else {
-            return log(left) / log(right);
+            return std::log(left) / std::log(right);
         }
     default:
         return left;
