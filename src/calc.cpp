@@ -27,13 +27,13 @@ enum class Op
 std::size_t arity(const Op op)
 {
     switch (op) {
-    // error
+        // error
     case Op::ERR: return 0;
-    // unary
+        // unary
     case Op::NEG: return 1;
     case Op::SQRT: return 1;
     case Op::FAC: return 1;
-    // binary
+        // binary
     case Op::SET: return 2;
     case Op::ADD: return 2;
     case Op::SUB: return 2;
