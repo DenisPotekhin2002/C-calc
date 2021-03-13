@@ -28,11 +28,13 @@ std::size_t arity(const Op op)
 {
     switch (op) {
         // error
-    case Op::ERR: return 0;
+    case Op::ERR:
+        return 0;
         // unary
     case Op::NEG: return 1;
     case Op::SQRT: return 1;
-    case Op::FAC: return 1;
+    case Op::FAC:
+        return 1;
         // binary
     case Op::SET: return 2;
     case Op::ADD: return 2;
@@ -186,15 +188,16 @@ double unary(const double current, const Op op)
             return current;
         }
     case Op::FAC:
-        if (current > 0 && (std::abs(current - std::round(current)) < 1e-5)){
+        if (current > 0 && (std::abs(current - std::round(current)) < 1e-5)) {
             double res = std::round(current);
             double i = res - 1;
-            while (i > 0){
+            while (i > 0) {
                 res *= i;
                 i--;
             }
             return res;
-        } else {
+        }
+        else {
             std::cerr << "Bad argument for factorial: " << current << std::endl;
             [[fallthrough]];
         }
@@ -233,13 +236,15 @@ double binary(const Op op, const double left, const double right)
     case Op::POW:
         return std::pow(left, right);
     case Op::LOG:
-        if (left <= 0){
+        if (left <= 0) {
             std::cerr << "Bad argument for logarithm: " << left << std::endl;
             return left;
-        } else if (right <= 0 || right == 1){
+        }
+        else if (right <= 0 || right == 1) {
             std::cerr << "Bad base for logarithm: " << right << std::endl;
             return left;
-        } else {
+        }
+        else {
             return std::log(left) / std::log(right);
         }
     default:
