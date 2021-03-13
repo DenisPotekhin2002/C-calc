@@ -158,9 +158,12 @@ TEST(Calc, fac)
     EXPECT_NEAR(3.04888e+029, process_line(28, "!"), 1.0e+25);
     testing::internal::CaptureStderr();
     EXPECT_NEAR(0.2, process_line(1000 - 999.8, "!"), 1e-13);
-    EXPECT_FALSE(testing::internal::GetCapturedStderr().empty());
-    const std::string_view msg_prefix = "Bad argument for factorial:";
-    EXPECT_EQ(msg_prefix, testing::internal::GetCapturedStderr().substr(0, msg_prefix.size()));
+    {
+        const auto captured_stderr = testing::internal::GetCapturedStderr();
+        EXPECT_FALSE(captured_stderr.empty());
+        const std::string_view msg_prefix = "Bad argument for factorial:";
+        EXPECT_EQ(msg_prefix, captured_stderr.substr(0, msg_prefix.size()));
+    }
     testing::internal::CaptureStderr();
     EXPECT_NEAR(24, process_line((1000 - 999.8) + 3.8, "!"), 1e-13);
     EXPECT_TRUE(testing::internal::GetCapturedStderr().empty());
